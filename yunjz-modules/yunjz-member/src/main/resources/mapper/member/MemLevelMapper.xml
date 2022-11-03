@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjz.member.mapper.MemLevelMapper">
+    
+    <resultMap type="com.yunjz.member.domain.MemLevel" id="MemLevelResult">
+        <result property="levelId"    column="level_id"    />
+        <result property="name"    column="name"    />
+        <result property="integration"    column="integration"    />
+        <result property="defaultStatus"    column="default_status"    />
+        <result property="showStatus"    column="show_status"    />
+    </resultMap>
+
+    <sql id="selectMemLevelVo">
+        select level_id, name, integration, default_status, show_status from mem_level
+    </sql>
+
+    <select id="selectMemLevelList" parameterType="com.yunjz.member.domain.MemLevel" resultMap="MemLevelResult">
+        <include refid="selectMemLevelVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="integration != null "> and integration = #{integration}</if>
+            <if test="defaultStatus != null "> and default_status = #{defaultStatus}</if>
+            <if test="showStatus != null "> and show_status = #{showStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectMemLevelByLevelId" parameterType="Long" resultMap="MemLevelResult">
+        <include refid="selectMemLevelVo"/>
+        where level_id = #{levelId}
+    </select>
+        
+    <insert id="insertMemLevel" parameterType="com.yunjz.member.domain.MemLevel" useGeneratedKeys="true" keyProperty="levelId">
+        insert into mem_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="integration != null">integration,</if>
+            <if test="defaultStatus != null">default_status,</if>
+            <if test="showStatus != null">show_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="integration != null">#{integration},</if>
+            <if test="defaultStatus != null">#{defaultStatus},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMemLevel" parameterType="com.yunjz.member.domain.MemLevel">
+        update mem_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="integration != null">integration = #{integration},</if>
+            <if test="defaultStatus != null">default_status = #{defaultStatus},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+        </trim>
+        where level_id = #{levelId}
+    </update>
+
+    <delete id="deleteMemLevelByLevelId" parameterType="Long">
+        delete from mem_level where level_id = #{levelId}
+    </delete>
+
+    <delete id="deleteMemLevelByLevelIds" parameterType="String">
+        delete from mem_level where level_id in 
+        <foreach item="levelId" collection="array" open="(" separator="," close=")">
+            #{levelId}
+        </foreach>
+    </delete>
+</mapper>

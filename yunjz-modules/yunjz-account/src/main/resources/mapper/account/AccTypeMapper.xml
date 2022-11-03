@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjz.account.mapper.AccTypeMapper">
+    
+    <resultMap type="com.yunjz.account.domain.AccType" id="AccTypeResult">
+        <result property="typeId"    column="type_id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="showStatus"    column="show_status"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <sql id="selectAccTypeVo">
+        select type_id, type_name, show_status, sort from acc_type
+    </sql>
+
+    <select id="selectAccTypeList" parameterType="com.yunjz.account.domain.AccType" resultMap="AccTypeResult">
+        <include refid="selectAccTypeVo"/>
+        <where>  
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="showStatus != null "> and show_status = #{showStatus}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+        </where>
+    </select>
+    
+    <select id="selectAccTypeByTypeId" parameterType="Long" resultMap="AccTypeResult">
+        <include refid="selectAccTypeVo"/>
+        where type_id = #{typeId}
+    </select>
+        
+    <insert id="insertAccType" parameterType="com.yunjz.account.domain.AccType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into acc_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">type_name,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">#{typeName},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccType" parameterType="com.yunjz.account.domain.AccType">
+        update acc_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteAccTypeByTypeId" parameterType="Long">
+        delete from acc_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteAccTypeByTypeIds" parameterType="String">
+        delete from acc_type where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjz.account.mapper.AccBookMapper">
+    
+    <resultMap type="com.yunjz.account.domain.AccBook" id="AccBookResult">
+        <result property="bookId"    column="book_id"    />
+        <result property="bookName"    column="book_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="defaultStatus"    column="default_status"    />
+        <result property="showStatus"    column="show_status"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModified"    column="gmt_modified"    />
+    </resultMap>
+
+    <sql id="selectAccBookVo">
+        select book_id, book_name, user_id, default_status, show_status, deleted, gmt_create, gmt_modified from acc_book
+    </sql>
+
+    <select id="selectAccBookList" parameterType="com.yunjz.account.domain.AccBook" resultMap="AccBookResult">
+        <include refid="selectAccBookVo"/>
+        <where>  
+            <if test="bookName != null  and bookName != ''"> and book_name like concat('%', #{bookName}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="defaultStatus != null "> and default_status = #{defaultStatus}</if>
+            <if test="showStatus != null "> and show_status = #{showStatus}</if>
+            <if test="deleted != null "> and deleted = #{deleted}</if>
+            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
+        </where>
+    </select>
+    
+    <select id="selectAccBookByBookId" parameterType="Long" resultMap="AccBookResult">
+        <include refid="selectAccBookVo"/>
+        where book_id = #{bookId}
+    </select>
+        
+    <insert id="insertAccBook" parameterType="com.yunjz.account.domain.AccBook" useGeneratedKeys="true" keyProperty="bookId">
+        insert into acc_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookName != null">book_name,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="defaultStatus != null">default_status,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModified != null">gmt_modified,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bookName != null">#{bookName},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="defaultStatus != null">#{defaultStatus},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccBook" parameterType="com.yunjz.account.domain.AccBook">
+        update acc_book
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookName != null">book_name = #{bookName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="defaultStatus != null">default_status = #{defaultStatus},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
+        </trim>
+        where book_id = #{bookId}
+    </update>
+    <update id="updateDefaultStatus">
+        update acc_book set default_status = 1 where book_id = #{bookId}
+    </update>
+    <update id="updateStatusFeign" parameterType="com.yunjz.account.vo.UserStatusTo">
+        update acc_book set show_status = #{userStatusTo.showStatus} where user_id = #{userStatusTo.userId}
+    </update>
+
+    <delete id="deleteAccBookByBookId" parameterType="Long">
+        delete from acc_book where book_id = #{bookId}
+    </delete>
+
+    <delete id="deleteAccBookByBookIds" parameterType="String">
+        delete from acc_book where book_id in 
+        <foreach item="bookId" collection="array" open="(" separator="," close=")">
+            #{bookId}
+        </foreach>
+    </delete>
+</mapper>

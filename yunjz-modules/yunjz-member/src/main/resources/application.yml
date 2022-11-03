@@ -1,0 +1,26 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  #配置热部署
+  devtools:
+    restart:
+      #设置开启热部署
+      enabled: false
+      #设置修改文件后需要重启的目录
+      additional-paths: src/main/java
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  level:
+    com.yunjz.member: debug
+
+
+

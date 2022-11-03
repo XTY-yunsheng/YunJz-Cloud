@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.yunjz</groupId>
+        <artifactId>yunjz</artifactId>
+        <version>3.5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>yunjz-system</module>
+        <module>yunjz-gen</module>
+        <module>yunjz-job</module>
+        <module>yunjz-file</module>
+        <module>yunjz-member</module>
+        <module>yunjz-account</module>
+    </modules>
+
+    <artifactId>yunjz-modules</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        yunjz-modules业务模块
+    </description>
+
+</project>

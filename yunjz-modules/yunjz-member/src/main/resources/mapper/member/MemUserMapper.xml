@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjz.member.mapper.MemUserMapper">
+    
+    <resultMap type="com.yunjz.member.domain.MemUser" id="MemUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="password"    column="password"    />
+        <result property="openid"    column="openid"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="levelId"    column="level_id"    />
+        <result property="integration"    column="integration"    />
+        <result property="gender"    column="gender"    />
+        <result property="birth"    column="birth"    />
+        <result property="sign"    column="sign"    />
+        <result property="showStatus"    column="show_status"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModified"    column="gmt_modified"    />
+        <result property="socialUid"    column="social_uid"    />
+        <result property="accessToken"    column="access_token"    />
+        <result property="expiresIn"    column="expires_in"    />
+    </resultMap>
+
+    <sql id="selectMemUserVo">
+        select user_id, user_name, password, openid, mobile, nickname, level_id, integration, gender, birth, sign, show_status, deleted, gmt_create, gmt_modified, social_uid, access_token, expires_in from mem_user
+    </sql>
+
+    <select id="selectMemUserList" parameterType="com.yunjz.member.domain.MemUser" resultMap="MemUserResult">
+        <include refid="selectMemUserVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="levelId != null "> and level_id = #{levelId}</if>
+            <if test="integration != null "> and integration = #{integration}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="birth != null "> and birth = #{birth}</if>
+            <if test="sign != null  and sign != ''"> and sign = #{sign}</if>
+            <if test="showStatus != null "> and show_status = #{showStatus}</if>
+            <if test="deleted != null "> and deleted = #{deleted}</if>
+            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
+            <if test="socialUid != null  and socialUid != ''"> and social_uid = #{socialUid}</if>
+            <if test="accessToken != null  and accessToken != ''"> and access_token = #{accessToken}</if>
+            <if test="expiresIn != null  and expiresIn != ''"> and expires_in = #{expiresIn}</if>
+            and deleted = 0
+        </where>
+    </select>
+    
+    <select id="selectMemUserByUserId" parameterType="Long" resultMap="MemUserResult">
+        <include refid="selectMemUserVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertMemUser" parameterType="com.yunjz.member.domain.MemUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into mem_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">user_name,</if>
+            <if test="password != null">password,</if>
+            <if test="openid != null">openid,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="levelId != null">level_id,</if>
+            <if test="integration != null">integration,</if>
+            <if test="gender != null">gender,</if>
+            <if test="birth != null">birth,</if>
+            <if test="sign != null">sign,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModified != null">gmt_modified,</if>
+            <if test="socialUid != null">social_uid,</if>
+            <if test="accessToken != null">access_token,</if>
+            <if test="expiresIn != null">expires_in,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">#{userName},</if>
+            <if test="password != null">#{password},</if>
+            <if test="openid != null">#{openid},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="levelId != null">#{levelId},</if>
+            <if test="integration != null">#{integration},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="birth != null">#{birth},</if>
+            <if test="sign != null">#{sign},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+            <if test="socialUid != null">#{socialUid},</if>
+            <if test="accessToken != null">#{accessToken},</if>
+            <if test="expiresIn != null">#{expiresIn},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMemUser" parameterType="com.yunjz.member.domain.MemUser">
+        update mem_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="levelId != null">level_id = #{levelId},</if>
+            <if test="integration != null">integration = #{integration},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birth != null">birth = #{birth},</if>
+            <if test="sign != null">sign = #{sign},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
+            <if test="socialUid != null">social_uid = #{socialUid},</if>
+            <if test="accessToken != null">access_token = #{accessToken},</if>
+            <if test="expiresIn != null">expires_in = #{expiresIn},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+    <update id="updateShowStatus" parameterType="com.yunjz.member.vo.UserStatusTo">
+        update mem_user set show_status = #{userStatusTo.showStatus} where user_id = #{userStatusTo.userId}
+    </update>
+
+    <delete id="deleteMemUserByUserId" parameterType="Long">
+        delete from mem_user where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteMemUserByUserIds" parameterType="String">
+        delete from mem_user where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

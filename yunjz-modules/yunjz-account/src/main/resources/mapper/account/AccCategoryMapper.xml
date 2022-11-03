@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjz.account.mapper.AccCategoryMapper">
+    
+    <resultMap type="com.yunjz.account.domain.AccCategory" id="AccCategoryResult">
+        <result property="categoryId"    column="category_id"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="showStatus"    column="show_status"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <sql id="selectAccCategoryVo">
+        select category_id, type_id, category_name, show_status, sort from acc_category
+    </sql>
+
+    <select id="selectAccCategoryList" parameterType="com.yunjz.account.domain.AccCategory" resultMap="AccCategoryResult">
+        <include refid="selectAccCategoryVo"/>
+        <where>  
+            <if test="typeId != null "> and type_id = #{typeId}</if>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="showStatus != null "> and show_status = #{showStatus}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+        </where>
+    </select>
+    
+    <select id="selectAccCategoryByCategoryId" parameterType="Long" resultMap="AccCategoryResult">
+        <include refid="selectAccCategoryVo"/>
+        where category_id = #{categoryId}
+    </select>
+        
+    <insert id="insertAccCategory" parameterType="com.yunjz.account.domain.AccCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into acc_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeId != null">type_id,</if>
+            <if test="categoryName != null">category_name,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeId != null">#{typeId},</if>
+            <if test="categoryName != null">#{categoryName},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccCategory" parameterType="com.yunjz.account.domain.AccCategory">
+        update acc_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where category_id = #{categoryId}
+    </update>
+    <update id="updateTypeId" parameterType="Long">
+        update acc_category set type_id = #{typeId} where category_id = #{categoryId}
+    </update>
+    <update id="updateTypeIdSetNull" parameterType="Long">
+        update acc_category set type_id = null where category_id = #{categoryId}
+    </update>
+
+    <delete id="deleteAccCategoryByCategoryId" parameterType="Long">
+        delete from acc_category where category_id = #{categoryId}
+    </delete>
+
+    <delete id="deleteAccCategoryByCategoryIds" parameterType="String">
+        delete from acc_category where category_id in 
+        <foreach item="categoryId" collection="array" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+    </delete>
+</mapper>
